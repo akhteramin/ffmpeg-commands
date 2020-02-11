@@ -1,0 +1,125 @@
+Caption timing alingment software 
+https://subsyncer.com/process.php
+
+Videos editing software ffmpeg
+https://trac.ffmpeg.org/wiki/ExtractSubtitles
+
+Important Commands:
+Delaying caption:
+ffmpeg -i Stimuli_1_Perfect_Caption.mp4 -itsoffset --1 -i Stimuli_1_Perfect_Caption.mp4 -map 0:v -map 0:a -map 1:s -c copy Stimuli_1_delayed_caption.mp4
+
+Make Caption Faster
+ffmpeg -i Stimuli_1_Perfect_Caption.mp4 -itsoffset -1 -i Stimuli_1_Perfect_Caption.mp4 -map 0:v -map 0:a -map 1:s -c copy Stimuli_1_faster_caption.mp4
+
+
+Extract Caption from video:
+ffmpeg -i Why\ the\ pencil\ is\ perfect\ \ \ Small\ Thing\ Big\ Idea\,\ a\ TED\ series.mp4 subtitle_1.srt
+
+Apply caption to a video:
+ffmpeg -i Why\ the\ pencil\ is\ perfect\ \ \ Small\ Thing\ Big\ Idea\,\ a\ TED\ series.mp4 -i subtitle_1.srt -c copy -c:s mov_text outfile.mp4
+
+Caption Slashing 
+ffmpeg -ss 00:01:42 -i subtitle_3.srt -t 00:03:44 new_subtitle_3.srt
+
+Videos Slashing
+ffmpeg -i Stimuli_3_Caption_NO_Speaker_Identification.mp4 -ss 00:01:42 -to 00:03:44 -c:v copy -c:a copy Stimuli_3_short_Caption_no_speaker_identification.mp4
+
+Embedding/Burning Force caption with video with background
+ffmpeg -i stimuli_1_no_caption.mp4 -filter_complex subtitles=subtitle.ass output_ass.mov
+
+ffmpeg -i stimuli_1_no_caption.mp4 -filter_complex "subtitles=subtitle.ass:force_style='OutlineColour=&H80000000,BorderStyle=3,Outline=1,Shadow=0,MarginV=20'" output_ass.mov (WIth inline style)
+
+----------------if any problem appeared with stream then use this command--------------- 
+ffmpeg -i Stimuli_P1.mp4 -max_muxing_queue_size 9999 -filter_complex subtitles=caption_p1.ass output_ass.mov
+
+----if you want to put some style on the put force style in command otherwise remove the forcestyle part and try to edit this in the ass file
+
+Convert srt file to ass
+ffmpeg -i subtitle_1.srt subtitle.ass
+
+Segment a video in multiple part and each part will have equal 2 minutes size
+ffmpeg -i Stanford\ Professor\ Andrei\ Linde\ celebrates\ physics\ breakthrough.mp4 -c copy -map 0 -segment_time 00:02:00 -f segment Stimuli_%03d.mp4
+
+Extract audio from video
+ffmpeg -i Washington\ in\ the\ \'80s\ -\ Feb\ 6.mp4 -vn -acodec copy output-audio.aac
+
+Extract AUdio from MPEG file
+ffmpeg -i TMZ_SmALL.mpg -vn -ac 2 -ar 44100 -ab 320k -f mp3 output.mp3
+
+Trim audio segment from a audio file
+ffmpeg -i output-audio.aac -ss 00:05:03 -t 44 -acodec copy output.aac
+
+Apply Audio to Video
+	Step 1:
+		ffmpeg -i input.mp4 -i input.mp3 -c copy -map 0:v:0 -map 1:a:0 output.mkv
+	Step 2:
+		ffmpeg -i output.mkv output.mov
+
+Merging two audio
+ffmpeg -i "concat:2_sec.mp3|output.mp3" -acodec copy output_final.mp3
+
+Make 2s silent audio
+ffmpeg -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 2 2_sec.mp3
+
+###################Caption position can be vertically or horizontally can be changed by changing these variables############################
+MarginL, MarginR, MarginV
+
+################################################
+# Run time caption moving regarding different Areal position in ASS files
+
+1
+00:00:01,000 --> 00:00:04,000
+{\an7} Top-left: an7
+
+2
+00:00:05,000 --> 00:00:08,000
+{\an8}Top-center: an8
+
+3
+00:00:09,000 --> 00:00:12,000
+{\an9}Top-right: an9
+
+4
+00:00:13,000 --> 00:00:16,000
+{\an4}Middle-left: an4
+
+5
+00:00:17,000 --> 00:00:20,000
+{\an5}Middle-center: an5
+
+6
+00:00:21,000 --> 00:00:24,000
+{\an6}Middle-right: an6
+
+7
+00:00:25,000 --> 00:00:28,000
+{\an1}Bottom-left: an1
+
+8
+00:00:29,000 --> 00:00:32,000
+{\an2}Bottom-Center an2
+
+9
+00:00:33,000 --> 00:00:36,000
+{\an3}Bottom-right: an3
+################################################
+
+
+# ASS file outline feature details
+Color
+Color values are expressed in hexadecimal BGR format as &HBBGGRR& or ABGR (with alpha channel) as &HAABBGGRR&. Transparency (alpha) can be expressed as &HAA&. Note that in the alpha channel, 00 is opaque and FF is transparent.
+
+Boolean values (Styles section)
+-1 is true, 0 is false.
+
+
+Alignment
+Alignment values are based on the numeric keypad. 1 - bottom left, 2 - bottom center, 3 - bottom right, 4 - center left, 5 - center center, 6 - center right, 7 - top left, 8 - top center, 9 - top right. In addition to determining the position of the subtitle, this also determines the alignment of the text itself.
+
+MarginL	Left margin.
+
+MarginR	Right margin.
+
+MarginV	Vertical margin.
+
+Encoding	A number representing the encoding to be used.
