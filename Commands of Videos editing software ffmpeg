@@ -1,30 +1,30 @@
 Caption timing alingment software 
 https://subsyncer.com/process.php
 
-Videos editing software ffmpeg
+------------------------Videos editing software ffmpeg----------------------
 https://trac.ffmpeg.org/wiki/ExtractSubtitles
 
 Important Commands:
-Delaying caption:
+------------------------Delaying caption:-----------------------------
 ffmpeg -i Stimuli_1_Perfect_Caption.mp4 -itsoffset --1 -i Stimuli_1_Perfect_Caption.mp4 -map 0:v -map 0:a -map 1:s -c copy Stimuli_1_delayed_caption.mp4
 
-Make Caption Faster
+--------------------Make Caption Faster----------------
 ffmpeg -i Stimuli_1_Perfect_Caption.mp4 -itsoffset -1 -i Stimuli_1_Perfect_Caption.mp4 -map 0:v -map 0:a -map 1:s -c copy Stimuli_1_faster_caption.mp4
 
 
-Extract Caption from video:
+-----------------Extract Caption from video:-------------
 ffmpeg -i Why\ the\ pencil\ is\ perfect\ \ \ Small\ Thing\ Big\ Idea\,\ a\ TED\ series.mp4 subtitle_1.srt
 
-Apply caption to a video:
+--------------------Apply caption to a video:---------------
 ffmpeg -i Why\ the\ pencil\ is\ perfect\ \ \ Small\ Thing\ Big\ Idea\,\ a\ TED\ series.mp4 -i subtitle_1.srt -c copy -c:s mov_text outfile.mp4
 
-Caption Slashing 
+----------------------Caption Slashing -----------------------
 ffmpeg -ss 00:01:42 -i subtitle_3.srt -t 00:03:44 new_subtitle_3.srt
 
-Videos Slashing
+------------------------Videos Slashing---------------------
 ffmpeg -i Stimuli_3_Caption_NO_Speaker_Identification.mp4 -ss 00:01:42 -to 00:03:44 -c:v copy -c:a copy Stimuli_3_short_Caption_no_speaker_identification.mp4
 
-Embedding/Burning Force caption with video with background
+---------------------Embedding/Burning Force caption with video with background---------------
 ffmpeg -i stimuli_1_no_caption.mp4 -filter_complex subtitles=subtitle.ass output_ass.mov
 
 ffmpeg -i stimuli_1_no_caption.mp4 -filter_complex "subtitles=subtitle.ass:force_style='OutlineColour=&H80000000,BorderStyle=3,Outline=1,Shadow=0,MarginV=20'" output_ass.mov (WIth inline style)
@@ -34,28 +34,34 @@ ffmpeg -i Stimuli_P1.mp4 -max_muxing_queue_size 9999 -filter_complex subtitles=c
 
 ----if you want to put some style on the put force style in command otherwise remove the forcestyle part and try to edit this in the ass file
 
-Convert srt file to ass
+----------------Convert srt file to ass--------------
 ffmpeg -i subtitle_1.srt subtitle.ass
 
-Segment a video in multiple part and each part will have equal 2 minutes size
+----------------Segment a video in multiple part and each part will have equal 2 minutes size-----------------
 ffmpeg -i Stanford\ Professor\ Andrei\ Linde\ celebrates\ physics\ breakthrough.mp4 -c copy -map 0 -segment_time 00:02:00 -f segment Stimuli_%03d.mp4
 
-Extract audio from video
+--------------Extract audio from video------------------
 ffmpeg -i Washington\ in\ the\ \'80s\ -\ Feb\ 6.mp4 -vn -acodec copy output-audio.aac
 
-Extract AUdio from MPEG file
+-----------------Extract AUdio from MPEG file-------------------
 ffmpeg -i TMZ_SmALL.mpg -vn -ac 2 -ar 44100 -ab 320k -f mp3 output.mp3
 
-Trim audio segment from a audio file
+--------------Trim audio segment from a audio file-----------
 ffmpeg -i output-audio.aac -ss 00:05:03 -t 44 -acodec copy output.aac
 
-Apply Audio to Video
+-------------------Apply Audio to Video------------------
 	Step 1:
 		ffmpeg -i input.mp4 -i input.mp3 -c copy -map 0:v:0 -map 1:a:0 output.mkv
 	Step 2:
 		ffmpeg -i output.mkv output.mov
 
-Merging two audio
+-----Get image from video at 30 frame rate---------------------
+for FILE_NAME in *.mov
+do
+    mkdir "${FILE_NAME}_images" & ffmpeg -i "$FILE_NAME" -vf fps=30/1 "${FILE_NAME}_images/${FILE_NAME%.*}"%04d.jpg -hide_banner
+done
+
+---------------------Merging two audio------------------------
 ffmpeg -i "concat:2_sec.mp3|output.mp3" -acodec copy output_final.mp3
 
 Make 2s silent audio
