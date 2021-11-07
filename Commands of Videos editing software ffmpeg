@@ -5,6 +5,9 @@ https://subsyncer.com/process.php
 https://trac.ffmpeg.org/wiki/ExtractSubtitles
 
 Important Commands:
+-----------------------------slowing down the video-------------------------
+ffmpeg -i 1.mp4 -filter:v "setpts=1.2*PTS" output.mp4
+
 ------------------------Delaying caption:-----------------------------
 ffmpeg -i Stimuli_1_Perfect_Caption.mp4 -itsoffset --1 -i Stimuli_1_Perfect_Caption.mp4 -map 0:v -map 0:a -map 1:s -c copy Stimuli_1_delayed_caption.mp4
 
