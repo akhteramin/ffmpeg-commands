@@ -8,6 +8,9 @@ Important Commands:
 -----------------------------slowing down the video-------------------------
 ffmpeg -i 1.mp4 -filter:v "setpts=1.2*PTS" output.mp4
 
+--------------------Make Video partially slower----------------------
+ffmpeg -i Soon.mp4 -filter_complex "[0:v]trim=0:2,setpts=PTS-STARTPTS[v1]; [0:v]trim=2:5,setpts=2*(PTS-STARTPTS)[v2]; [0:v]trim=5,setpts=PTS-STARTPTS[v3]; [0:a]atrim=0:2,asetpts=PTS-STARTPTS[a1]; [0:a]atrim=2:5,asetpts=PTS-STARTPTS,atempo=0.5[a2]; [0:a]atrim=5,asetpts=PTS-STARTPTS[a3];[v1][a1][v2][a2][v3][a3]concat=n=3:v=1:a=1" -preset superfast -profile:v baseline output.mp4
+
 ------------------------Delaying caption:-----------------------------
 ffmpeg -i Stimuli_1_Perfect_Caption.mp4 -itsoffset --1 -i Stimuli_1_Perfect_Caption.mp4 -map 0:v -map 0:a -map 1:s -c copy Stimuli_1_delayed_caption.mp4
 
